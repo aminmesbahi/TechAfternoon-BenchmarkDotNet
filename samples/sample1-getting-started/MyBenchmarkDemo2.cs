@@ -1,6 +1,7 @@
 using BenchmarkDotNet.Attributes;
 
-//  Group the benchmarks into categories and filter them by categories
+// [AnyCategoriesFilter] keeps only benchmarks that belong to at least one of the listed categories.
+// B2 is excluded because it doesn't belong to "A" or "1" — even though it has a numeric category.
 [DryJob]
 [CategoriesColumn]
 [BenchmarkCategory("Awesome")]
@@ -9,42 +10,17 @@ public class MyBenchmarkDemo2
 {
     [Benchmark]
     [BenchmarkCategory("A", "1")]
-    public void A1() => Thread.Sleep(10); // Will be benchmarked
+    public void A1() => Thread.Sleep(10);
 
     [Benchmark]
     [BenchmarkCategory("A", "2")]
-    public void A2() => Thread.Sleep(10); // Will be benchmarked
+    public void A2() => Thread.Sleep(10);
 
     [Benchmark]
     [BenchmarkCategory("B", "1")]
-    public void B1() => Thread.Sleep(10); // Will be benchmarked
+    public void B1() => Thread.Sleep(10);
 
     [Benchmark]
     [BenchmarkCategory("B", "2")]
-    public void B2() => Thread.Sleep(10); // Why? Because it's not in the filter "1" OR "A"
+    public void B2() => Thread.Sleep(10); // skipped — matches neither "A" nor "1"
 }
-
-/* Exmaple of a benchmark class with a global setup method
-[MemoryDiagnoser]
-//[SimpleJob(launchCount: 1, warmupCount: 3)]
-[SimpleJob(BenchmarkDotNet.Engines.RunStrategy.ColdStart, launchCount:3)]
-public class MyBenchmarkDemo2
-{
-    [GlobalSetup]
-    public void GlobalSetup()
-    {
-        //Write your initialization code here
-    }
-
-    [Benchmark]
-    public void MyFirstBenchmarkMethod()
-    {
-        //Write your code here   
-    }
-    [Benchmark]
-    public void MySecondBenchmarkMethod()
-    {
-        //Write your code here
-    }
-}
-*/

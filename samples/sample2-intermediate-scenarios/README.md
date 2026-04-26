@@ -1,53 +1,36 @@
-# Sample 2, Intermediate Scenarios
+# Sample 2 — Intermediate Scenarios
 
-1. `dotnet add package BenchmarkDotNet`
-2. `dotnet run -c Release`
+```bash
+dotnet run -c Release
+```
 
+Builds on the basics with more realistic configurations: choosing the right run strategy for your workload, exporting results in multiple formats, tuning power plans, feeding data via params and argument sources, and benchmarking async code.
 
-## MyBenchmarkDemo1
-- Get to know Monitoring strategy
-- SimpleJob: Is a job that runs the benchmark with the specified run strategy and iteration count.
-- BenchmarkDotNet.Engines.RunStrategy.Monitoring: Monitoring means that the benchmark is run in a warm environment, which is useful for testing the performance of a method after it has been run multiple times.
-- iterationCount: Is the number of times the benchmark is run.
-- id: Is the identifier of the job appearing in the benchmark results.
+## Demo 1 — Monitoring strategy
 
-## MyBenchmarkDemo2
-- Get to know the benchmark output summary
-- [ShortRunJob]: A quick benchmark job with fewer iterations, optimized for speed over accuracy.
-- [MediumRunJob]: A balanced benchmark job with a moderate number of iterations, providing a trade-off between accuracy and runtime.
-- [KeepBenchmarkFiles]: Keeps the benchmark files after the benchmark run.
-- [AsciiDocExporter]: Exports the benchmark results in AsciiDoc format.
-- [CsvExporter]: Exports the benchmark results in CSV format.
-	- [CsvMeasurementsExporter]: Exports the benchmark results in CSV format with measurements.
-- [HtmlExporter]: Exports the benchmark results in HTML format.
-- [PlainExporter]: Exports the benchmark results in plain text format.
-- [RPlotExporter]: Exports the benchmark results in RPlot format. RPlot is a file format used by the R programming language.
-- [JsonExporterAttribute.Brief]: Exports the benchmark results in JSON format with brief information.
-- [JsonExporterAttribute.BriefCompressed]: Exports the benchmark results in JSON format with brief information and compression.
-- [JsonExporterAttribute.Full]: Exports the benchmark results in JSON format with full information.
-- [JsonExporterAttribute.FullCompressed]: Exports the benchmark results in JSON format with full information and compression.
-- [MarkdownExporterAttribute.Default]: Exports the benchmark results in Markdown format with default settings.
-- [MarkdownExporterAttribute.GitHub]: Exports the benchmark results in Markdown format with GitHub settings.
-- [MarkdownExporterAttribute.StackOverflow]: Exports the benchmark results in Markdown format with Stack Overflow settings.
-- [MarkdownExporterAttribute.Atlassian]: Exports the benchmark results in Markdown format with Atlassian settings.
-- [XmlExporterAttribute.Brief]: Exports the benchmark results in XML format with brief information.
-- [XmlExporterAttribute.BriefCompressed]: Exports the benchmark results in XML format with brief information and compression.
-- [XmlExporterAttribute.Full]: Exports the benchmark results in XML format with full information.
-- [XmlExporterAttribute.FullCompressed]: Exports the benchmark results in XML format with full information and compression.
+`RunStrategy.Monitoring` is designed for longer-running methods (100 ms+). Unlike `Throughput`, it doesn't try to pack multiple invocations into a single measurement window — it just times each call directly. The `id` parameter gives the job a name that shows up in the results table.
 
-## MyBenchmarkDemo3
-- Get to know the benchmark configuration & Power Plans
-- [Config(typeof(Config))]: Specifies the configuration class for the benchmark.
-- WithPowerPlan: Specifies the power plan to use for the benchmark.
+## Demo 2 — Exporters
 
-## MyBenchmarkDemo4-7
-- Get to know the benchmark parameters and arguments
-- [Params(100, 200)]: Specifies the parameters for the benchmark.
-- [Params(10, Priority = -100)]: Priority means that the parameter is run first. lower values are run first.
-- [Arguments(200, 20)]: Specifies the arguments for the benchmark.
-- [Arguments(10, Priority = -100)]: Priority means that the argument is run first. lower values are run first.
+BenchmarkDotNet can export results in almost any format you need — CSV, JSON, XML, Markdown (GitHub/StackOverflow/Atlassian flavours), HTML, AsciiDoc, and R plot data. This demo stacks every available exporter so you can see what each one produces in the `BenchmarkDotNet.Artifacts` folder.
 
-## MyBenchmarkDemo8
-- Get to know the benchmark parameters sources and arguments sources
-- [ArgumentsSource(nameof(Numbers), Priority = 10)]: argument source is a method that returns an IEnumerable of arguments.
-- [ParamsSource(nameof(Numbers), Priority = 10)]: parameter source is a method that returns an IEnumerable of parameters.
+## Demo 3 — Power plans
+
+Windows power plans have a measurable effect on CPU-bound benchmarks. This demo runs the same workload under every built-in power plan (from `PowerSaver` to `UltimatePerformance`) so you can see exactly how much difference they make.
+
+## Demo 4–7 — Params and Arguments
+
+These four demos cover the different ways to feed input values into benchmarks:
+- `[Params]` injects values into a property — BenchmarkDotNet creates a separate run for each combination.
+- `Priority` controls the order columns appear in the results table (lower value = leftmost).
+- `[Arguments]` passes values directly to benchmark method parameters.
+- `[ArgumentsSource]` reads values from a method or property, useful when you need dynamic or complex inputs.
+
+## Demo 8–9 — ArgumentsSource and ParamsSource
+
+When inline `[Arguments]` isn't enough, point `[ArgumentsSource]` at an `IEnumerable<object[]>` for multiple parameters, or `IEnumerable<object>` for a single parameter. `[ParamsSource]` does the same for class-level properties and fields.
+
+## Demo 10 — Async benchmarks
+
+BenchmarkDotNet understands `async Task`, `async Task<T>`, and `async ValueTask<T>` natively — the runner awaits the returned task automatically. This demo compares four async patterns: a plain `Task.Delay`, `Task.Run` for CPU work on the thread pool, `ValueTask` to avoid heap allocation, and `Task.WhenAll` for concurrent fan-out.
+

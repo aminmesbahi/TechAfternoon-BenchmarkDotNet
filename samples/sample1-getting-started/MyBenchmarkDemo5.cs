@@ -1,6 +1,5 @@
 using BenchmarkDotNet.Attributes;
 
-// Strategies: ColdStart, Throughput, Monitoring
 [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.ColdStart, iterationCount: 5)]
 [MinColumn, MaxColumn, MeanColumn, MedianColumn]
 public class MyBenchmarkDemo5

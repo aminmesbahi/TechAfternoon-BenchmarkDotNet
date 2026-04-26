@@ -1,34 +1,37 @@
-# Sample 1, Getting Started
+# Sample 1 — Getting Started
 
-1. `dotnet add package BenchmarkDotNet`
-2. `dotnet run -c Release`
+```bash
+dotnet run -c Release
+```
 
+This sample walks through the fundamentals of BenchmarkDotNet. By the end you'll know how to write your first benchmark, add a baseline for comparison, group methods into categories, and hook into the benchmark lifecycle.
 
-## MyBenchmarkDemo1
-- Get to know the basics of BenchmarkDotNet
-- [Benchmark]
-- [Benchmark(Description = "Thread.Sleep(15)")]
-- [Benchmark(Baseline = true, Description = "Thread.Sleep(10)")]: Baseline benchmarks are used to compare the performance of other benchmarks.
+## Demo 1 — The basics
 
-## MyBenchmarkDemo2
-- Get to know the benchmark categories
-- [DryJob]: Performs a quick run with minimal iterations for faster results, useful for testing benchmark setups.
-- [CategoriesColumn]: Adds a column to the benchmark results that displays the categories assigned to each benchmark method.
-- [BenchmarkCategory("Awesome")]: Assigns a category to a benchmark method.
-- [AnyCategoriesFilter("A", "1")]: Filters benchmarks that have any of the specified categories.
+Just decorate any method with `[Benchmark]` and BenchmarkDotNet takes care of the rest. Marking one method as `Baseline = true` tells the runner to compute a ratio for every other method relative to it. You can also set a `Description` to give a benchmark a friendlier name in the results table.
 
-## MyBenchmarkDemo3
-- Get to know the benchmark grouping
-- [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]: Groups benchmarks by category.
-- [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByParams)]: Groups benchmarks by parameter values.
-- [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByMethod)]: Groups benchmarks by method name.
-- [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByJob)]: Groups benchmarks by job.
+## Demo 2 — Categories and filters
 
-## MyBenchmarkDemo4
-- Get to know the benchmark custom category discovery
-- [CustomCategoryDiscoverer]: A custom category discoverer that assigns a category to a benchmark method based on the method name.
+`[BenchmarkCategory]` lets you tag individual methods, and `[AnyCategoriesFilter]` keeps only the methods that match at least one of the listed tags. In this example `B2` is skipped because it doesn't belong to either "A" or "1" — a good way to understand how the filter logic works.
 
-## MyBenchmarkDemo5
-- Get to know the benchmark RunStrategy
-- [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.ColdStart, iterationCount: 5)]: ColdStart means that the benchmark is run in a cold environment, which is useful for testing the performance of the first run of a method.
-- [MinColumn, MaxColumn, MeanColumn, MedianColumn]: Adds columns to the benchmark results that display the minimum, maximum, mean, and median values of the benchmark results.
+## Demo 3 — Grouping benchmarks
+
+`[GroupBenchmarksBy(ByCategory)]` splits the results table into separate groups per category, and each group gets its own baseline. That makes it easy to compare "Fast" methods against each other and "Slow" methods against each other without the two groups distorting each other's ratios.
+
+## Demo 4 — Custom category discoverer
+
+If the built-in category attributes aren't flexible enough, you can implement `ICategoryDiscoverer` yourself. This demo adds every method's first letter as a category automatically — no per-method attribute needed.
+
+## Demo 5 — Run strategies
+
+`ColdStart` measures performance on the very first call, including JIT warm-up cost. This is useful when you care about startup latency rather than steady-state throughput. The extra statistics columns (`MinColumn`, `MaxColumn`, etc.) help you see the spread across iterations.
+
+## Demo 6 — Benchmark lifecycle
+
+Shows the four lifecycle hooks in order:
+- `[GlobalSetup]` — runs once before any iterations start; allocate or load shared state here.
+- `[IterationSetup]` — runs before every individual iteration; reset mutable state here.
+- `[IterationCleanup]` — runs after every iteration.
+- `[GlobalCleanup]` — runs once after all iterations are done; release resources here.
+
+The benchmark itself compares three ways to sum a byte array: a plain scalar loop, `Span<T>`, and LINQ. It also shows the C# 14 `field` keyword on a private semi-auto property.

@@ -13,28 +13,42 @@ public class CollectionBenchmark
     private const int NumberOfItemsToAdd = 1000;
     private const int NumberOfItemsToSearch = 100;
     private const int NumberOfItemsToDelete = 50;
-    private List<int> list;
-    private HashSet<int> hashSet;
-    private Dictionary<int, int> dictionary;
-    private SortedList<int, int> sortedList;
-    private LinkedList<int> linkedList;
-    private Random random;
-    private int[] searchItems;
-    private int[] deleteItems;
+    private List<int> list = null!;
+    private HashSet<int> hashSet = null!;
+    private Dictionary<int, int> dictionary = null!;
+    private SortedList<int, int> sortedList = null!;
+    private LinkedList<int> linkedList = null!;
+    private Random random = null!;
+    private int[] searchItems = null!;
+    private int[] deleteItems = null!;
 
     [GlobalSetup]
     public void Setup()
     {
         random = new Random();
-        list = new List<int>();
-        hashSet = new HashSet<int>();
-        dictionary = new Dictionary<int, int>();
-        sortedList = new SortedList<int, int>();
-        linkedList = new LinkedList<int>();
-
-        // Pre-generate random items to search and delete
         searchItems = Enumerable.Range(1, NumberOfItemsToSearch).Select(_ => random.Next(NumberOfItemsToAdd)).ToArray();
         deleteItems = Enumerable.Range(1, NumberOfItemsToDelete).Select(_ => random.Next(NumberOfItemsToAdd)).ToArray();
+        ResetCollections();
+    }
+
+    // Resets all collections to a consistent pre-populated state before each iteration,
+    // so Add/Search/Delete benchmarks always operate on the same data.
+    [IterationSetup]
+    public void ResetCollections()
+    {
+        list = new List<int>(NumberOfItemsToAdd);
+        hashSet = new HashSet<int>(NumberOfItemsToAdd);
+        dictionary = new Dictionary<int, int>(NumberOfItemsToAdd);
+        sortedList = new SortedList<int, int>(NumberOfItemsToAdd);
+        linkedList = new LinkedList<int>();
+        for (int i = 0; i < NumberOfItemsToAdd; i++)
+        {
+            list.Add(i);
+            hashSet.Add(i);
+            dictionary.Add(i, i);
+            sortedList.Add(i, i);
+            linkedList.AddLast(i);
+        }
     }
 
     [Benchmark(Baseline = true), BenchmarkCategory("Add")]

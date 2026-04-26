@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using Bogus;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -81,8 +81,4 @@ public class SQLiteBenchmark
         transaction.Commit();
     }
 
-    public static void Main(string[] args)
-    {
-
-    }
 }
