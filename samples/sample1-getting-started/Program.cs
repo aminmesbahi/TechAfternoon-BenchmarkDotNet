@@ -1,4 +1,8 @@
 ﻿using BenchmarkDotNet.Running;
 
 Console.WriteLine("Welcome to Getting Started Scenarios!");
-BenchmarkRunner.Run<MyBenchmarkDemo5>();
+
+if (args.Length == 0)
+    args = ["--filter", "*", "--job", "dry", "--launchCount", "1"];
+
+BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);

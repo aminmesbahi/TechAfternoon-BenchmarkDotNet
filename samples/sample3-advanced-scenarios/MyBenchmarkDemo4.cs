@@ -5,9 +5,6 @@ using BenchmarkDotNet.Jobs;
 
 public class MyBenchmarkDemo4
 {
-    /// <summary>
-    /// Dry-x64 jobs for specific jits
-    /// </summary>
     private class MyConfigSourceAttribute : Attribute, IConfigSource
     {
         public IConfig Config { get; }
@@ -21,7 +18,8 @@ public class MyBenchmarkDemo4
         }
     }
 
-    [MyConfigSource(Jit.RyuJit, Jit.LegacyJit)]
+    // NOTE: Jit.LegacyJit is only available on .NET Framework (Windows). On .NET Core/.NET 5+, RyuJIT is always used.
+    [MyConfigSource(Jit.RyuJit)]
     [Benchmark]
     public void Foo()
     {

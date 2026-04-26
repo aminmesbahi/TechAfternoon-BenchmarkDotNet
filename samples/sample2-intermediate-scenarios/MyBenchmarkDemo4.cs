@@ -25,7 +25,7 @@ public class MyBenchmarkDemo5
 
 public class MyBenchmarkDemo6
 {
-    [Params(true, false)] // Arguments can be combined with Params
+    [Params(true, false)]
     public bool AddExtra5Milliseconds;
 
     [Benchmark]
@@ -45,10 +45,10 @@ public class MyBenchmarkDemo6
 
 public class MyBenchmarkDemo7
 {
-    [Params(100, Priority = 0)] // Argument priority can be combined with Params priority
+    [Params(100, Priority = 0)]
     public int A { get; set; }
 
-    [Arguments(5, Priority = -10)] // Define priority just once for multiple argument attributes
+    [Arguments(5, Priority = -10)]
     [Arguments(10)]
     [Arguments(20)]
     [Benchmark]

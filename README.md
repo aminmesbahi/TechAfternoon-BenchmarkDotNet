@@ -1,21 +1,28 @@
-# TechAfternoon-BenchmarkDotNet
-TechAfternoon webinar in BenchmarkDotNet, including BenchmarkDotNet sample codes
+# TechAfternoon — BenchmarkDotNet
 
-### [docs](./docs/)
-- [BenchmarkDotNet Attributes](./docs/attributes.md)
-- [Benchmark's output terminology](./docs/benchmark-output-terms.md)
-- [Benchmark Jabs & Strategies](./docs/strategies-and-jobs.md)
-- [BenchmarkDotNet Resources & Side-Projects & Tools!](./docs/resources.md)
-- [Database Benchmarking overview](./docs/DB.md)
+Sample code from the TechAfternoon webinar on [BenchmarkDotNet](https://benchmarkdotnet.org/), a powerful .NET library for microbenchmarking.
+
+All samples target **.NET 10** and **C# 14**.
+
+## Samples
+
+| # | Folder | What you'll learn |
+|---|--------|-------------------|
+| 1 | [Getting Started](./samples/sample1-getting-started/) | The basics — attributes, baselines, categories, run strategies, and the full lifecycle |
+| 2 | [Intermediate Scenarios](./samples/sample2-intermediate-scenarios/) | Exporters, power plans, params, argument sources, and async benchmarks |
+| 3 | [Advanced Scenarios](./samples/sample3-advanced-scenarios/) | GC modes, EventPipe profiling, custom JIT config, and ranking columns |
+| 4 | [Real-world Scenarios](./samples/sample4-real-world/) | Comparing .NET collection types and benchmarking SQLite with Dapper |
+
+## Docs
+
+- [Attributes reference](./docs/attributes.md)
+- [Understanding benchmark output](./docs/benchmark-output-terms.md)
+- [Jobs & run strategies](./docs/strategies-and-jobs.md)
+- [Database benchmarking overview](./docs/DB.md)
+- [Resources & tools](./docs/resources.md)
+
 ---
-### [Sample Codes on BenchmarkDotNet](./samples/)
--  [Sample 1, Getting Started](./sample1-getting-started/)
--  [Sample 2, Intermediate Scenarios](./sample2-intermediate-scenarios/)
--  [Sample 3, Advanced Scenarios](./sample3-advanced-scenarios/)
--  [Sample 4, Real world Scenarios](./sample4-real-world/)
----
-This webinar held on 8-Sep-2024
 
-**[Persian Telegram Channel for NEWS and Updates](https://t.me/techafternoon)**
+Webinar recorded on **8 Sep 2024**
 
-**[Webinar recorded video in Persian](https://www.youtube.com/watch?v=C4GH7SC9yuE&ab_channel=AminTechTalks)**
+**[Persian Telegram Channel](https://t.me/techafternoon)** · **[Recorded video (Persian)](https://www.youtube.com/watch?v=C4GH7SC9yuE&ab_channel=AminTechTalks)**

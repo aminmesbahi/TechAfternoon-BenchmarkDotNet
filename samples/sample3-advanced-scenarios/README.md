@@ -1,35 +1,34 @@
-# Sample 3, Advanced Scenarios
+# Sample 3 — Advanced Scenarios
 
-1. `dotnet add package BenchmarkDotNet`
-2. `dotnet run -c Release`
+```bash
+dotnet run -c Release
+```
 
-## BenchmarkSwitcher
-- BenchmarkSwitcher is a tool that allows you to run benchmarks from the command line.
+Covers the deeper features you reach for when you need full control: GC configuration, EventPipe profiling, custom JIT selection, and result ordering. All benchmarks are wired through `BenchmarkSwitcher`, so you can pick exactly what to run from the command line.
 
+```bash
+# Run a specific class
+dotnet run -c Release -- --filter "*Algo_Md5*"
+# List all available benchmarks
+dotnet run -c Release -- --list flat
+```
 
-## MyBenchmarkDemo1
-- Get to know the Native memory and unsafe code
-- WithGcServer: Means the GC is server mode,Servers are usually used in scenarios where the application is long-lived and the workload is consistent.
-- [Orderer(SummaryOrderPolicy.FastestToSlowest)]: Means the order of the benchmark results is from fastest to slowest.
+## Demo 1 — GC modes and memory allocation
 
-## MyBenchmarkDemo2
-- Get to know EventPipeProfiler
-- EventPipeProfiler: EventPipe is a new low-level tracing API that enables capturing diagnostics events from .NET applications. 
-  It is a high-performance, low-impact mechanism for capturing traces that can be used for diagnosing a wide range of issues.
+Server GC and Workstation GC behave very differently under allocation pressure. This demo runs the same heap (`new byte[10kB]`) and stack (`stackalloc byte[10kB]`) allocation scenarios across four GC job combinations so the difference shows up clearly in the results.
 
+## Demo 2 — EventPipe profiling
 
-## MyBenchmarkDemo3: Algo_Md5VsSha256
-- Compare the performance of MD5 and SHA256 algorithms
-- Fluent Config Builder: Use the fluent config builder to configure the benchmark
+EventPipe is .NET's built-in, cross-platform tracing mechanism. Attaching `[EventPipeProfiler]` to a benchmark class tells BenchmarkDotNet to capture a `.nettrace` file for each run. Available profiles include `CpuSampling`, `GcVerbose`, `GcCollect`, and `Jit`.
 
-## MyBenchmarkDemo4:
-- Custom Config: Use the custom config to configure the benchmark
-- IConfigSource: Is a source of IConfig instances, which can be used to provide custom configurations for the benchmarks.
-- Jit.RyuJit: RyuJit is the new 64-bit JIT compiler for .NET. It is the default JIT compiler for .NET Core on x64 and x86 architectures.
-- Jit.LegacyJit: LegacyJit is the 64-bit JIT compiler for .NET Framework on x64 and x86 architectures.
+## Demo 3 — MD5 vs SHA256 (fluent config)
 
-## MyBenchmarkDemo5:
-- RankingColumn: The column to display in the summary table.
-- [RankColumn(NumeralSystem.Arabic)]: NumeralSystem.Arabic is the default numeral system.
-- [RankColumn(NumeralSystem.Roman)]: NumeralSystem.Roman is the Roman numeral system.
-- [RankColumn(NumeralSystem.Stars)]: NumeralSystem.Stars is the star-based system.
+A classic real-world comparison: which hashing algorithm is faster for a fixed payload? The `IntroFluentConfigBuilder` class shows how to chain job and validator configuration using the fluent API instead of attributes.
+
+## Demo 4 — Custom JIT configuration
+
+`IConfigSource` lets you define an attribute that bakes a custom `IConfig` into a benchmark class. This demo creates jobs for specific JIT compilers via attribute parameters. Note: on .NET 5+ the only available JIT is RyuJIT; `LegacyJit` is a .NET Framework concept.
+
+## Demo 5 — Ranking columns
+
+`[RankColumn]` adds a column that shows each benchmark's relative rank. BenchmarkDotNet supports three numeral systems: Arabic (1, 2, 3), Roman (I, II, III), and Stars (*, **, ***).

@@ -30,11 +30,11 @@ public class IntroFluentConfigBuilder
 {
     public static void Run()
     {
+        // NOTE: ClrRuntime.Net48 requires .NET Framework 4.8 on Windows — omitted for cross-platform compatibility.
         BenchmarkRunner
             .Run<Algo_Md5VsSha256>(
                 DefaultConfig.Instance
-                    .AddJob(Job.Default.WithRuntime(ClrRuntime.Net48))
-                    .AddJob(Job.Default.WithRuntime(CoreRuntime.Core90))
-                    .AddValidator(ExecutionValidator.FailOnError)); // fail if there are any errors
+                    .AddJob(Job.Default.WithRuntime(CoreRuntime.CreateForNewVersion("10.0", ".NET 10.0")))
+                    .AddValidator(ExecutionValidator.FailOnError));
     }
 }
