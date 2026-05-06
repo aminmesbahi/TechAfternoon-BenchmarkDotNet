@@ -7,7 +7,7 @@ using Microsoft.Data.Sqlite;
 public class SQLiteBenchmark
 {
     private const string ConnectionString = "Data Source=:memory:";
-    private SqliteConnection _connection;
+    private SqliteConnection _connection = null!;
     private readonly Faker _faker = new Faker();
 
     [GlobalSetup]
